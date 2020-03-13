@@ -45,6 +45,9 @@ namespace WeatherApiService.Controllers
 
         private static string[] GetCitiesSplitedWithSeparator(string cities)
         {
+            if (string.IsNullOrEmpty(cities))
+                return new string[0];
+
             var citiesArr = cities.Split(',');
             if (citiesArr.Length == 0)
                 citiesArr = cities.Split(';');
