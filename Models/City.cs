@@ -1,16 +1,7 @@
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace WeatherApiService.Models
 {
-    public class Localizations
-    {
-        [JsonProperty("city")]
-        public List<City> Cities { get; set; }
-
-        public static Localizations FromJson(string json) => JsonConvert.DeserializeObject<Localizations>(json, Converter.Settings);
-    }
-
     public class City
     {
         [JsonProperty("id")]
@@ -18,10 +9,7 @@ namespace WeatherApiService.Models
 
         [JsonProperty("name")]
         public string Name { get; set; }
-
-        [JsonProperty("coord")]
-        public CoordinatesLocalization Coord { get; set; }
-
+        
         [JsonProperty("country")]
         public string Country { get; set; }
 
@@ -33,20 +21,23 @@ namespace WeatherApiService.Models
 
         [JsonProperty("sunset")]
         public long Sunset { get; set; }
+
+        public CoordinatesLocalization Coord { get; set; }
     }
 
+    [JsonObject("coord")]
     public class CoordinatesLocalization
     {
         [JsonProperty("lat")]
-        public double Latitude { get; set; }
+        public double Lat { get; set; }
 
         [JsonProperty("lon")]
-        public double Longitude { get; set; }
+        public double Long { get; set; } 
     }
 
     public static class Serialize
     {
-        public static string ToJson(this Localizations self) => JsonConvert.SerializeObject(self, Converter.Settings);
+        public static string ToJson(this City self) => JsonConvert.SerializeObject(self, Converter.Settings);
     }
 }
 

@@ -1,53 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace WeatherApiService.Models
 {
-    [JsonObject]
+    [Serializable]
     public class WeatherForecast
     {
         [JsonProperty("cod")]
-        [JsonConverter(typeof(ParseStringConverter))]
         public long Cod { get; set; }
 
         [JsonProperty("message")]
         public long Message { get; set; }
 
         [JsonProperty("cnt")]
-        public long ContResults {get; set; }
+        public long Cnt { get; set; }
 
         [JsonProperty("list")]
-        public List<ListWeathers> WeathersResults { get; set; }
+        public ListWeathers[] List { get; set; }
 
         [JsonProperty("city")]
-        public List<Localizations> LocalizationsList { get; set; }
+        public City City { get; set; }
     }
 
     public class ListWeathers
     {
         [JsonProperty("dt")]
-        public long DateHour { get; set; }
+        public long Dt { get; set; }
+
+        [JsonProperty("wind")]
+        public Wind Wind { get; set; }
+
+        [JsonProperty("dt_txt")]
+        public string Dt_Txt { get; set; }
+
+        [JsonProperty("sys")]
+        public SystemData Sys { get; set; }
 
         [JsonProperty("main")]
-        public AtmosphericData AtmosphericDataResult { get; set; }
+        public AtmosphericData Main { get; set; }
 
         [JsonProperty("weather")]
         public Weather[] Weather { get; set; }
 
         [JsonProperty("clouds")]
         public Clouds Clouds { get; set; }
-
-        [JsonProperty("wind")]
-        public Wind Wind { get; set; }
-
-        [JsonProperty("sys")]
-        public SystemData SystemDataResult { get; set; }
-
-        [JsonProperty("dt_txt")]
-        public DateTimeOffset DtTxt { get; set; }
     }
 
     public class Clouds
@@ -62,28 +60,28 @@ namespace WeatherApiService.Models
         public double Temp { get; set; }
 
         [JsonProperty("feels_like")]
-        public double FeelsLike { get; set; }
+        public double Feels_Like { get; set; }
 
         [JsonProperty("temp_min")]
-        public double TempMin { get; set; }
+        public double Temp_Min { get; set; }
 
         [JsonProperty("temp_max")]
-        public double TempMax { get; set; }
+        public double Temp_Max { get; set; }
 
         [JsonProperty("pressure")]
         public long Pressure { get; set; }
 
         [JsonProperty("sea_level")]
-        public long SeaLevel { get; set; }
+        public long Sea_Level { get; set; }
 
         [JsonProperty("grnd_level")]
-        public long GrndLevel { get; set; }
+        public long Grnd_Level { get; set; }
 
         [JsonProperty("humidity")]
         public long Humidity { get; set; }
 
         [JsonProperty("temp_kf")]
-        public double TempKf { get; set; }
+        public double Temp_Kf { get; set; }
     }
 
     public partial class SystemData
@@ -92,7 +90,7 @@ namespace WeatherApiService.Models
         public string Pod { get; set; }
     }
 
-    public partial class Weather
+    public class Weather
     {
         [JsonProperty("id")]
         public long Id { get; set; }
