@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using RestSharp;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WeatherApiService.Models;
+using WeatherApiService.Services;
 
 namespace WeatherApiService.Controllers
 {
@@ -11,12 +12,8 @@ namespace WeatherApiService.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<WeatherForecastController> _logger;
+        public IRestClient _restClient { get; set; } = new RestClient();
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
@@ -24,16 +21,44 @@ namespace WeatherApiService.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public ResponseWeather Get(CitiesRequest cities)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            if (!ContainCitiesReques(cities))
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return new ResponseWeather
+                {
+                    Message = "não informado cidades válidas no request"
+                };
+            };
+
+            return ConsumeOpenWeatherApi(cities);
+        }
+
+        private ResponseWeather ConsumeOpenWeatherApi(CitiesRequest cities)
+        {
+            const string token = "eb8b1a9405e659b2ffc78f0a520b1a46";
+            var responseList = new ResponseWeather();
+
+            foreach (var city in cities.CitiesCodes)
+            {
+                _restClient.BaseUrl = new Uri($"http://api.openweathermap.org/data/2.5/forecast?id={city}&APPID={token}");
+                var request = new RestRequest(Method.GET);
+
+                var resp = _restClient.Execute(request);
+
+                if (resp == null)
+                    continue;
+
+                Console.WriteLine(resp.Content);
+                responseList.ResponseList.Add(resp);
+            }
+
+            return responseList;
+        }
+
+        private bool ContainCitiesReques(CitiesRequest cities)
+        {
+            return cities != null && cities.CitiesCodes != null && cities.CitiesCodes.Any();
         }
     }
 }
