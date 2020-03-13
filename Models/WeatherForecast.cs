@@ -5,7 +5,6 @@ using Newtonsoft.Json.Converters;
 
 namespace WeatherApiService.Models
 {
-    [Serializable]
     public class WeatherForecast
     {
         [JsonProperty("cod")]
@@ -33,7 +32,7 @@ namespace WeatherApiService.Models
         public Wind Wind { get; set; }
 
         [JsonProperty("dt_txt")]
-        public string Dt_Txt { get; set; }
+        public string DtTxt { get; set; }
 
         [JsonProperty("sys")]
         public SystemData Sys { get; set; }
@@ -63,25 +62,25 @@ namespace WeatherApiService.Models
         public double Feels_Like { get; set; }
 
         [JsonProperty("temp_min")]
-        public double Temp_Min { get; set; }
+        public double TempMin { get; set; }
 
         [JsonProperty("temp_max")]
-        public double Temp_Max { get; set; }
+        public double TempMax { get; set; }
 
         [JsonProperty("pressure")]
         public long Pressure { get; set; }
 
         [JsonProperty("sea_level")]
-        public long Sea_Level { get; set; }
+        public long SeaLevel { get; set; }
 
         [JsonProperty("grnd_level")]
-        public long Grnd_Level { get; set; }
+        public long GrndLevel { get; set; }
 
         [JsonProperty("humidity")]
         public long Humidity { get; set; }
 
         [JsonProperty("temp_kf")]
-        public double Temp_Kf { get; set; }
+        public double TempKf { get; set; }
     }
 
     public partial class SystemData

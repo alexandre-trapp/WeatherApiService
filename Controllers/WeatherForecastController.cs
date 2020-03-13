@@ -1,7 +1,7 @@
 ﻿using System;
 using RestSharp;
 using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,6 +22,9 @@ namespace WeatherApiService.Controllers
             _logger = logger;
         }
 
+        ///<summary>
+        ///Code from city to request api Weather
+        ///</summary>
         [HttpGet("{idCity}")]
         public async Task<IActionResult> Get([FromRoute] string idCity)
         {
@@ -29,10 +32,24 @@ namespace WeatherApiService.Controllers
             return await ProcessRequestWeather(request);
         }
 
+        ///<summary>
+        ///Codes from cities to request api Weather, separated with ',' or ';'
+        ///</summary>
         [HttpGet]
-        public async Task<IActionResult> Get([FromBody] string[] cities)
+        [Route("cities/{cities}")]
+        public async Task<IActionResult> GetCities([FromRoute] string cities)
         {
-            return await ProcessRequestWeather(cities);
+            string[] citiesArr = GetCitiesSplitedWithSeparator(cities);
+            return await ProcessRequestWeather(citiesArr);
+        }
+
+        private static string[] GetCitiesSplitedWithSeparator(string cities)
+        {
+            var citiesArr = cities.Split(',');
+            if (citiesArr.Length == 0)
+                citiesArr = cities.Split(';');
+
+            return citiesArr;
         }
 
         private async Task<IActionResult> ProcessRequestWeather(string[] cities)
@@ -41,14 +58,14 @@ namespace WeatherApiService.Controllers
             {
                 var responseNotFound = new ResponseWeather
                 {
-                    Message = "não informado cidades válidas no request"
+                    MessageResponse = "não informado cidades válidas no request"
                 };
 
-                return NotFound(Utf8Json.JsonSerializer.ToJsonString(responseNotFound));
+                return NotFound(JsonConvert.SerializeObject(responseNotFound));
             };
 
             var response = await ConsumeOpenWeatherApi(cities);
-            return Ok(Utf8Json.JsonSerializer.ToJsonString(response));
+            return Ok(JsonConvert.SerializeObject(response));
         }
 
         private async Task<ResponseWeather> ConsumeOpenWeatherApi(string[] cities)
@@ -72,13 +89,11 @@ namespace WeatherApiService.Controllers
                 if (string.IsNullOrEmpty(resp.Content))
                     sbLog.AppendLine($"Content is empty; Request idCity: {city}");
 
-                responseList.ResponseList.Add(resp);
-
-                var weather = JsonSerializer.Deserialize<WeatherForecast>(resp.Content);
+                var weather = JsonConvert.DeserializeObject<WeatherForecast>(resp.Content);
                 responseList.WeathersList.Add(weather);
             }
 
-            responseList.Message = (string.IsNullOrEmpty(sbLog.ToString()) ? "Success" : sbLog.ToString());
+            responseList.MessageResponse = (string.IsNullOrEmpty(sbLog.ToString()) ? "Success" : sbLog.ToString());
 
             return responseList;
         }
