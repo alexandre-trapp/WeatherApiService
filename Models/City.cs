@@ -32,7 +32,7 @@ namespace WeatherApiService.Models
         public double Lat { get; set; }
 
         [JsonProperty("lon")]
-        public double Long { get; set; } 
+        public double Lon { get; set; } 
     }
 
     public static class Serialize
