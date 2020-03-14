@@ -7,7 +7,7 @@ namespace WeatherApiService.Services
 {
     public class ResponseWeather
     {
-        [JsonProperty("wheatersList")]
+        [JsonProperty("weathersList")]
         public List<WeatherForecast> WeathersList { get; set; } = new List<WeatherForecast>();
 
         [JsonProperty("messageResponse")]
