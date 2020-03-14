@@ -86,8 +86,11 @@ namespace WeatherApiService.Controllers
                 var resp = await _restClient.ExecuteGetAsync<IRestResponse>(request);
 
                 if (resp == null)
+                {
+                    sbLog.AppendLine($"response is null; Request idCity: {city}");
                     continue;
-
+                }
+                
                 Console.WriteLine(resp.Content);
                 if (string.IsNullOrEmpty(resp.Content))
                     sbLog.AppendLine($"Content is empty; Request idCity: {city}");
