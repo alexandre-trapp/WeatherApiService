@@ -1,5 +1,5 @@
 # WeatherApiService
-Serviço para consumo da api http://api.openweathermap.org/data/2.5/
+api rest para consumo da api http://api.openweathermap.org/data/2.5/ para previsões do tempo
 
 Ocorreu problemas com o projeto para publicação no azure, de referencias com as packages do nuget, que não consegui arrumar a tempo;
 
